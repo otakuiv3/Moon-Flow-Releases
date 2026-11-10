@@ -41,6 +41,7 @@ jobs:
         with:
           repository: otakuiv3/-Moon-Flow
           ref: ${{ steps.request.outputs.sha }}
+          fetch-depth: 0
           ssh-key: ${{ secrets.MOONFLOW_SOURCE_READ_KEY }}
           path: source
           persist-credentials: false
@@ -74,10 +75,10 @@ jobs:
         env:
           MOONFLOW_UPDATE_SIGNING_KEY: ${{ secrets.MOONFLOW_UPDATE_SIGNING_KEY }}
         run: node scripts/package-windows.cjs
-      - name: Verify signature, clean payload and offline bundled browsers
+      - name: Verify signed payloads, installed upgrade and offline bundled browsers
         if: steps.version.outputs.skip != 'true'
         run: node scripts/verify-windows-release.cjs
-      - name: Upload and publish only the verified installer and signed metadata
+      - name: Publish verified installers and signed metadata
         if: steps.version.outputs.skip != 'true'
         env:
           MOONFLOW_GITHUB_TOKEN: ${{ github.token }}
